@@ -101,9 +101,9 @@ class Employer
 
   def invalidate_find_caches
     Rails.cache.delete("Employer/find/fein.#{fein}")
-    elected_plans.each do |ep|
-      Rails.cache.delete("Employer/find/employer_group_ids.#{ep.carrier_id}.#{ep.carrier_employer_group_id}")
-    end
+#    elected_plans.each do |ep|
+#      Rails.cache.delete("Employer/find/employer_group_ids.#{ep.carrier_id}.#{ep.carrier_employer_group_id}")
+#    end
     true
   end
 
@@ -154,15 +154,14 @@ class Employer
   end
 
   def self.find_for_carrier_and_group_id(carrier_id, group_id)
-    Rails.cache.fetch("Employer/find/employer_group_ids.#{carrier_id}.#{group_id}") do
-      Employer.where({ :elected_plans => {
+      py = PlanYear.where({ :elected_plans => {
         "$elemMatch" => {
           "carrier_id" => carrier_id,
           "carrier_employer_group_id" => group_id
         }
       }
       }).first
-    end
+      Maybe.new(py).employer.value
   end
 
   def merge_address(m_address)
