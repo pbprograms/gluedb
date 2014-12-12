@@ -83,7 +83,7 @@ class Income
   end
 
   def set_amount_in_cents
-    self.amount_in_cents = (self.amount.to_f * 100).to_i if self.amount
+    self.amount_in_cents = (self.amount.to_f * 100).to_i if ((self.respond_to? self.amount) && self.amount)
   end
 
 end
