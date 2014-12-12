@@ -33,7 +33,9 @@ class ApplicationGroupBuilder
   def add_tax_households(tax_households_params, eligibility_determinations_params)
 
     tax_households_params.map do |tax_household_params|
-      tax_household = @household.tax_households.build(tax_household_params)
+
+      tax_household = @household.tax_households.build(tax_household_params.slice(:id, :primary_applicant_id,
+                                                                                 :total_count, :total_incomes_by_year))
 
       tax_household_params[:tax_household_members].map do |tax_household_member_params|
         tax_household_member = tax_household.tax_household_members.build(tax_household_member_params)
