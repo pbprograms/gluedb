@@ -6,6 +6,7 @@
 
   <div class="row">
     <div class="col-md-offset-8 col-md-4">
+      <%= link_to "New", new_application_group_path, class: "button" %>
       <%= render 'shared/search', url: people_path, q: @q, placeholder: "Name, HBX ID, SSN" %>
     </div>
   </div>

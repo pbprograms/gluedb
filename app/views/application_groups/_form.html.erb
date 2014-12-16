@@ -1,0 +1,22 @@
+
+  <%= f.hidden_field :_destroy, :value => f.object._destroy %>
+
+  <% if @application_group.errors.any? %>
+    <div class="error_messages">
+      <h2>You must correct the following <%= pluralize(@application_group.errors.count, "error") %> errors to continue:</h2>
+      <ul>
+        <% @application_group.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%# if notification = f.error_notification %>
+    <div class="alert alert-error fade in">
+      <a class="close" data-dismiss="alert" href="#">&times;</a>
+      <%#= notification %>
+    </div>
+  <%# end %>
+
+  <%= render 'people/form', f: @person %>

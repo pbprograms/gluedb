@@ -3,19 +3,20 @@
     <tr>
       <th>Primary Applicant</th>
       <th>Applicant Ct</th>
-      <th>Enrollment Ct</th>
-      <th>Submitted Date</th>
+      <th>Market</th>
+      <th>Submitted At</th>
     </tr>
   </thead>
     <tbody>
       <%= table_empty_to_human if application_groups.count < 1 %>
       <% application_groups.each do |ag| %>
       <tr>
-        <% label_ref = ag.primary_applicant ? ag.primary_applicant.full_name : ag.id %>
+        <% label_ref = "#{ag.id} - #{ag.primary_applicant.id}" %>
+        <% label_ref = ag.primary_applicant.person.full_name if (!ag.primary_applicant.blank? && !ag.primary_applicant.person.blank? && !ag.primary_applicant.person.full_name.blank?) %>
         <td><%= link_to prepend_glyph_to_name(label_ref), application_group_path(ag) %> </td>
-        <td><%= ag.applicants.size %></td>
-        <td><%= ag.hbx_enrollments.size %></td>
-        <td><%= ag.submitted_date %></td>
+        <td><%= ag.active_applicants.size %></td>
+        <td><%#= ag.hbx_enrollments.size %></td>
+        <td><%= ag.submitted_at %></td>
       </tr>
     </tbody>
   <% end %>

@@ -1,7 +1,21 @@
-<h1>Works!</h1>
+<%- model_class = ApplicantLink -%>
+<%t '.title', :default => model_class.model_name.human.pluralize.titleize %>
+<div class="page-header">
+  <%- #pid = @application_group.person_relationships.first.subject_person -%>
+  <%= render 'shared/breadcrumb', crumbs: [
+    link_to('Application Groups', application_groups_path), 
+    link_to(@application_group.id, application_group_path(@application_group.id)),
+    "Applicants"
+      # Person.find(pid).name_full
+    ]
+    %>
+  </div>
 
+  <%= "hbx_id = #{@application_group.hbx_assigned_id}" %>
+
+  <div class='col-md-12'>
     <div class="row">
-      <div class="col-md-5">
         <%= render 'applicant_table', applicants: @applicants, application_group: @application_group   %>
-      </div>
     </div>
+
+</div>

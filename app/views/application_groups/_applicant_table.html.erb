@@ -18,7 +18,7 @@
       <td><%= a.authority_member.hbx_member_id %></td>
       <td><%= a.authority_member.gender %></td>
       <td><%= a.authority_member.dob %></td>
-      <td><%= a.authority_member.ssn %></td>
+      <td><%= number_to_obscured_ssn(a.authority_member.ssn) %></td>
       <td><%= a.authority_member.citizen_status %></td>
       <td><%= a.authority_member.marital_status %></td>
     </tr>

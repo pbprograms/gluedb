@@ -1,0 +1,22 @@
+<%- model_class = ApplicationGroup -%>
+<div class="page-header">
+  <%= render 'shared/breadcrumb', crumbs: [
+      link_to('Application Groups', application_groups_path),
+      'New'
+    ]
+  %>
+</div>
+
+<%= form_for(@application_group, html: {class:  'form-horizontal' }) do |f| %>
+  <%#= f.hidden_field :application_group_id %>
+  <%#= render 'form', f: f %>
+
+  <div class="well well-sm well-default">
+    <div class="form-actions">
+      <%= link_to 'Link Employee', link_employee_application_group_path(@application_group.id), class: 'btn btn-primary' %>
+      <%= f.submit nil, class: 'btn btn-primary' %>
+      <%= link_to t('.cancel', default: t("helpers.links.cancel")), application_groups_path, class: 'btn btn-default' %>
+    </div>
+  </div>
+
+<% end %>
