@@ -1,5 +1,17 @@
 Gluedb::Application.routes.draw do
 
+  get "applicants/link_employee"
+
+  get "applicants/challenge_identity"
+
+  get "applicants/new"
+
+  get "applicants/create"
+
+  get "applicants/show"
+
+  get "applicants/update"
+
   devise_for :users, :path => "accounts"
 
   root :to => 'dashboards#index'
@@ -24,16 +36,16 @@ Gluedb::Application.routes.draw do
     resources :users
   end
 
-  resources :application_groups do
-    get 'page/:page', :action => :index, :on => :collection
-
-    # resources :primary_applicant, only: [:new, :create, :update]
-    resources :applicants
+  resources :applicants do
 
     member do
       get :link_employee
       get :challenge_identity
     end
+  end
+
+  resources :application_groups do
+    get 'page/:page', :action => :index, :on => :collection
 
     resources :households
   end
