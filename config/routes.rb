@@ -7,7 +7,6 @@ Gluedb::Application.routes.draw do
   get "dashboards/index"
   get "welcome/index"
   get "tools/premium_calc"
-  get "flatuipro_demo/index"
 
   post "policy_forms", :to => 'policies#create'
 
