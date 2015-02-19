@@ -37,6 +37,9 @@ class Policy
   validates_presence_of :tot_res_amt
   validates_presence_of :plan_id
 
+
+  embeds_many :premium_credits
+  
   embeds_many :enrollees
   accepts_nested_attributes_for :enrollees, reject_if: :all_blank, allow_destroy: true
 
