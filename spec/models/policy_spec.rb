@@ -256,7 +256,7 @@ describe Policy do
         expect(found_policy.responsible_party_id).to eq responsible_party_id
         expect(found_policy.employer_id).to eq employer_id
         expect(found_policy.broker_id).to eq broker_id
-        expect(found_policy.applied_aptc).to eq applied_aptc
+        # expect(found_policy.applied_aptc).to eq applied_aptc
         expect(found_policy.tot_res_amt).to eq tot_res_amt
         expect(found_policy.pre_amt_tot).to eq pre_amt_tot
         expect(found_policy.employer_contribution).to eq employer_contribution
@@ -335,6 +335,28 @@ describe Policy do
 
     it 'collects all active enrollees' do
       expect(policy.active_enrollees).to eq [active_enrollee]
+    end
+  end
+
+
+  describe '#applied_aptc' do
+    context 'when premium credits present' do 
+      let(:premium_credit1) { PremiumCredit.new(aptc_in_cents: '270.50', start_on: '1/1/2014', end_on: '4/30/2014') }
+      let(:premium_credit2) { PremiumCredit.new(aptc_in_cents: '325.00', start_on: '5/1/2014', end_on: '12/31/2014') }
+      before { policy.premium_credits = [ premium_credit2, premium_credit1 ] }
+
+      it 'should return recent aptc amount' do 
+        expect(policy.applied_aptc).to eq(325.0)
+      end
+    end
+
+    context 'when premium credit is voided' do 
+      let(:premium_credit1) { PremiumCredit.new(aptc_in_cents: '270.50', start_on: '1/1/2014', end_on: '4/30/2014', is_voided: true) }
+      before { policy.premium_credits = [ premium_credit1 ] }
+
+      it 'should return zero' do 
+        expect(policy.applied_aptc).to eq(0.0)
+      end
     end
   end
 end

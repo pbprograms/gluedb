@@ -32,21 +32,17 @@ class Policy
 
 
   validates_presence_of :eg_id
-#  validates_presence_of :plan_id
   validates_presence_of :pre_amt_tot
   validates_presence_of :tot_res_amt
   validates_presence_of :plan_id
 
-
-  embeds_many :premium_credits
-  
   embeds_many :enrollees
   accepts_nested_attributes_for :enrollees, reject_if: :all_blank, allow_destroy: true
 
   embeds_many :comments
   accepts_nested_attributes_for :comments, reject_if: proc { |attribs| attribs['content'].blank? }, allow_destroy: true
 
-  belongs_to :hbx_enrollment_policy, class_name: "ApplicationGroup", inverse_of: :hbx_enrollment_policies, index: true
+  belongs_to :hbx_enrollment_policy, class_name: "Family", inverse_of: :hbx_enrollment_policies, index: true
   belongs_to :carrier, counter_cache: true, index: true
   belongs_to :broker, counter_cache: true, index: true # Assumes that broker change triggers new enrollment group
   belongs_to :plan, counter_cache: true, index: true
@@ -174,6 +170,11 @@ class Policy
 
   def is_shop?
     !employer_id.blank?
+  end
+
+  def applied_aptc
+    premium_credit = premium_credits.reject{|p| p.is_voided?}.sort_by{|p| p.start_on }.last
+    premium_credit.blank? ? 0.0 : premium_credit.aptc_in_cents
   end
 
   def subscriber
@@ -533,9 +534,15 @@ class Policy
 
   def coverage_period
     start_date = policy_start
+
     if !policy_end.nil?
-       return (start_date..policy_end)
+      if policy_end.year > policy_start.year
+        return (start_date..Date.new(start_date.year, 12, 31))
+      else
+        return (start_date..policy_end)
+      end
     end
+
     if employer_id.blank?
        return (start_date..Date.new(start_date.year, 12, 31))
     end
@@ -608,6 +615,28 @@ class Policy
       en.coverage_end.blank? ? self.coverage_period_end : en.coverage_end
     end
     end_dates.uniq.length > 1
+  end
+
+  def rejected?
+    edi_transactions = Protocols::X12::TransactionSetEnrollment.where({ "policy_id" => self.id })
+    (edi_transactions.count == 1 && edi_transactions.first.aasm_state == 'rejected') ? true : false
+  end
+
+  def has_no_enrollees?
+    active_enrollees = self.enrollees.reject{|en| en.canceled?}
+    active_enrollees.empty? ? true : false
+  end
+
+  def belong_to_year?(year)
+    self.subscriber.coverage_start > Date.new((year - 1), 12, 31) && self.subscriber.coverage_start < Date.new(year, 12, 31)
+  end
+
+  def authority_member
+    self.subscriber.person.authority_member
+  end
+
+  def belong_to_authority_member?
+    authority_member.hbx_member_id == self.subscriber.m_id
   end
 
   protected

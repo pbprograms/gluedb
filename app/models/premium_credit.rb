@@ -2,24 +2,23 @@ class PremiumCredit
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  # Second Lowest Cost Silver Plan
-  field :slcsp_id, type: BSON::ObjectId
-
-  field :aptc_in_cents, type: Integer, default: 0
+  field :aptc_in_cents, type: BigDecimal, default: 0.00
   field :start_on, type: Date
   field :end_on, type: Date
-
   field :is_voided, type: Boolean, default: false
   field :is_corrected, type: Boolean, default: false
 
-  def slcsp=(new_slcsp)
-    raise ArgumentError.new("expected Plan class") unless new_slcsp.is_a? Plan
-    self.new_slcsp_id = new_slcsp._id
-  end
+  # Second Lowest Cost Silver Plan
+  # field :slcsp_id, type: String
 
-  def slcsp
-    Plan.find(self.new_slcsp_id) unless new_slcsp_id.blank?
-  end
+  # def slcsp=(new_slcsp)
+  #   raise ArgumentError.new("expected Plan class") unless new_slcsp.is_a? Plan
+  #   self.new_slcsp_id = new_slcsp._id
+  # end
+
+  # def slcsp
+  #   Plan.find(self.new_slcsp_id) unless new_slcsp_id.blank?
+  # end
 
   def is_voided?
     is_voided
@@ -28,5 +27,4 @@ class PremiumCredit
   def is_corrected?
     is_corrected
   end
-
 end
