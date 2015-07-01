@@ -8,6 +8,8 @@ class PremiumCredit
   field :is_voided, type: Boolean, default: false
   field :is_corrected, type: Boolean, default: false
 
+  embedded_in :policy
+
   # Second Lowest Cost Silver Plan
   # field :slcsp_id, type: String
 

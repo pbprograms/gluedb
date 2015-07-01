@@ -339,26 +339,26 @@ describe Policy do
   end
 
 
-  describe '#applied_aptc' do
-    context 'when premium credits present' do 
-      let(:premium_credit1) { PremiumCredit.new(aptc_in_cents: '270.50', start_on: '1/1/2014', end_on: '4/30/2014') }
-      let(:premium_credit2) { PremiumCredit.new(aptc_in_cents: '325.00', start_on: '5/1/2014', end_on: '12/31/2014') }
-      before { policy.premium_credits = [ premium_credit2, premium_credit1 ] }
+  # describe '#applied_aptc' do
+  #   context 'when premium credits present' do 
+  #     let(:premium_credit1) { PremiumCredit.new(aptc_in_cents: '270.50', start_on: '1/1/2014', end_on: '4/30/2014') }
+  #     let(:premium_credit2) { PremiumCredit.new(aptc_in_cents: '325.00', start_on: '5/1/2014', end_on: '12/31/2014') }
+  #     before { policy.premium_credits = [ premium_credit2, premium_credit1 ] }
 
-      it 'should return recent aptc amount' do 
-        expect(policy.applied_aptc).to eq(325.0)
-      end
-    end
+  #     it 'should return recent aptc amount' do 
+  #       expect(policy.applied_aptc).to eq(325.0)
+  #     end
+  #   end
 
-    context 'when premium credit is voided' do 
-      let(:premium_credit1) { PremiumCredit.new(aptc_in_cents: '270.50', start_on: '1/1/2014', end_on: '4/30/2014', is_voided: true) }
-      before { policy.premium_credits = [ premium_credit1 ] }
+  #   context 'when premium credit is voided' do 
+  #     let(:premium_credit1) { PremiumCredit.new(aptc_in_cents: '270.50', start_on: '1/1/2014', end_on: '4/30/2014', is_voided: true) }
+  #     before { policy.premium_credits = [ premium_credit1 ] }
 
-      it 'should return zero' do 
-        expect(policy.applied_aptc).to eq(0.0)
-      end
-    end
-  end
+  #     it 'should return zero' do 
+  #       expect(policy.applied_aptc).to eq(0.0)
+  #     end
+  #   end
+  # end
 end
 
 describe Policy do

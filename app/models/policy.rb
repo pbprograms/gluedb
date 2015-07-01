@@ -42,6 +42,8 @@ class Policy
   embeds_many :comments
   accepts_nested_attributes_for :comments, reject_if: proc { |attribs| attribs['content'].blank? }, allow_destroy: true
 
+  embeds_many :premium_credits
+
   belongs_to :hbx_enrollment_policy, class_name: "Family", inverse_of: :hbx_enrollment_policies, index: true
   belongs_to :carrier, counter_cache: true, index: true
   belongs_to :broker, counter_cache: true, index: true # Assumes that broker change triggers new enrollment group
@@ -172,10 +174,11 @@ class Policy
     !employer_id.blank?
   end
 
-  def applied_aptc
-    premium_credit = premium_credits.reject{|p| p.is_voided?}.sort_by{|p| p.start_on }.last
-    premium_credit.blank? ? 0.0 : premium_credit.aptc_in_cents
-  end
+  # def applied_aptc
+  #   return 0.0 unless premium_credits.any?
+  #   premium_credit = premium_credits.reject{|p| p.is_voided?}.sort_by{|p| p.start_on }.last
+  #   return premium_credit.blank? ? 0.0 : premium_credit.aptc_in_cents
+  # end
 
   def subscriber
     enrollees.detect { |m| m.relationship_status_code == "self" }
