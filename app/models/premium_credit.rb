@@ -10,6 +10,9 @@ class PremiumCredit
 
   embedded_in :policy
 
+  default_scope  ->{ order(:"start_on".desc) }
+  scope :active, ->{ where(:is_voided => false) }
+
   # Second Lowest Cost Silver Plan
   # field :slcsp_id, type: String
 
